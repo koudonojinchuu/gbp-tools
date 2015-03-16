@@ -89,19 +89,29 @@ def main(argv):
         return 1
 
     try:
-        if len(args) != 2:
+        rep_root=os.path.curdir
+        if len(args) > 2:
             parser.print_help()
             raise GbpError
-        else:
+        elif len(args) == 1: # automatically find untracked patches
+            series=rep_root+'/debian/patches/series'
+            repo.add_files(series)
+            pro = subprocess.Popen(["git","ls-files","-o","debian/patches"],stdout=PIPE,stderr=PIPE)
+            untracked_patches = pro.communicate()[0].split()
+            try: untracked_patches.remove('debian/patches/series')
+            except: pass
+            for filename in untracked_patches:
+                patch = Patch(filename)
+                repo.add_files(filename)
+                msg = build_commit_msg(repo, patch, options)
+                repo.commit_staged(edit=options.edit, msg=msg)
+        else: # the patch to add was explicitly given as a command line argument
             patchfile = args[1]
-
-        patch = Patch(patchfile)
-
-        repo.add_files(patchfile)
-        msg = build_commit_msg(repo, patch, options)
-        repo.commit_staged(edit=options.edit, msg=msg)
-        # FIXME: handle the series file
-
+            patch = Patch(patchfile)
+            repo.add_files(patchfile)
+            msg = build_commit_msg(repo, patch, options)
+            repo.commit_staged(edit=options.edit, msg=msg)
+    
     except GitRepositoryError:
         retval = 1
     except GbpError as err:
