@@ -40,6 +40,8 @@ from gbp.config import (GbpOptionParserDebian, GbpOptionGroup)
 from gbp.errors import GbpError
 from gbp.git import (GitRepositoryError, GitRepository)
 from gbp.patch_series import Patch
+from subprocess import PIPE
+import subprocess
 
 
 def build_commit_msg(repo, patch, options):
