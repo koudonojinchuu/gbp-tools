@@ -98,7 +98,7 @@ def main(argv):
         elif len(args) == 1: # automatically find untracked patches
             series=rep_root+'/debian/patches/series'
             repo.add_files(series)
-            pro = subprocess.Popen(["git","ls-files","-o","debian/patches"],stdout=PIPE,stderr=PIPE)
+            pro = subprocess.Popen(["git","ls-files","-o","--exclude-standard","debian/patches"],stdout=PIPE,stderr=PIPE)
             untracked_patches = pro.communicate()[0].split()
             try: untracked_patches.remove('debian/patches/series')
             except: pass
