@@ -1,0 +1,3 @@
+#!/bin/bash
+gbp-pq export
+gbp-add-patch
