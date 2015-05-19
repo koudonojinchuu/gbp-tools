@@ -1,0 +1,19 @@
+gbp-debianize-gitrepo  will be implemented.
+gbp-gitify-debianrepo  is only gpb-import-dsc, so we don't implement it.
+gbp-debianize-and-gitify  is gbp-import-orig with additional code to create debian/ contents (first stubs).
+      -> we may implement this one
+
+Hub to all that, to implement :
+gbp-debgit
+  -> after that we have a debianized gitified repo, whatever we had before (in input).
+Can take: 1) a .dsc
+          2) a .tar.gz (or other archive)
+          3) a git repo
+            3a) with debian/ inside
+            3b) without
+
+
+Once we have the debgit repo, all to do is to create the Github repo, and then from inside of the local debgit repo on the laptop do :
+git remote add origin https://github.com/koudonojinchuu/magnus.git               ## if magnus is the repo name
+git push --all -u origin
+So these 2 last commands will remain something to do by hand. Won't implement that in the automated tools.

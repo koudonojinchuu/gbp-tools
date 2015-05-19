@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Arguments :
+# $1 : 
+
+# Get repository name
+repo_name=
+# Guess version number
