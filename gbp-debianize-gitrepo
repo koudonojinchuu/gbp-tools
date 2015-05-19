@@ -1,8 +1,33 @@
 #!/bin/bash
 
-# Arguments :
-# $1 : 
+# Arguments : none
+# All is guessed from the git repo from inside which it is launched.
+# Output :  - if a debian/ folder already exists, error is raised.
+#           - else, at the root of the git repo a debian/ directory is created, with the branch master, and original git is copied on branch upstream.
 
-# Get repository name
-repo_name=
-# Guess version number
+# Get repository name: it is the current git repo directory name
+root_repo_path="$(git rev-parse --show-toplevel)"
+repo_name="$(basename $root_repo_path)"
+### Guess version number (from tags)
+## if there is a current tag and it is unique, take it as a version
+## else, maybe take the previous one, if unique
+#by default:
+version=0.1
+##version=TODO
+
+# Rename current branch to "upstream"
+git branch -m upstream
+
+# Duplicate it to master (the debianized branch)
+git checkout -b master
+
+# Go to git repo root
+old_wd=`pwd`
+cd $root_repo_path
+
+# Create the debian/ directory
+dh_make -p eudev_$version --createorig
+## change the -1 in -0 in the changelog, so that when we start working the first releasable version will be -1
+git add debian
+git commit -m "debianize"
+git tag debian/$version
