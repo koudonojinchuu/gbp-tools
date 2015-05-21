@@ -10,7 +10,10 @@ root_repo_path="$(git rev-parse --show-toplevel)"
 repo_name="$(basename $root_repo_path)"
 ### Guess version number (from tags)
 ## if there is a current tag and it is unique, take it as a version
-## else, maybe take the previous one, if unique
+## if not unique, take the one with numbers in it
+## if several have numbers, take the smallest one by lexicographical order
+## else, maybe take the previous one, if unique, and same rules if non unique/
+## if no tag at all, create one called 0.1 (with git tag), and use it for "version"
 #by default:
 version=0.1
 ##version=TODO
