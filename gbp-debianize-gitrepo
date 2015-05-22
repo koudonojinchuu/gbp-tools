@@ -23,6 +23,7 @@ do
 done
 # take the first with numbers, or the first one:
 version= #TODO
+version=$(echo "$last_tags" | cut -d ' ' -f 1)
 #by default:
 if [[ $last_tags == "" ]]
 then
