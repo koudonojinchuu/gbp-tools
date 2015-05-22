@@ -14,6 +14,11 @@ repo_name="$(basename $root_repo_path)"
 ## if several have numbers, take the smallest one by lexicographical order
 ## else, maybe take the previous one, if unique, and same rules if non unique/
 ## if no tag at all, create one called 0.1 (with git tag), and use it for "version"
+last_tags=$(git tags --points-at HEAD)
+if [[ $head_tags == "" ]]
+then
+   last_tags= #TODO
+fi
 #by default:
 version=0.1
 ##version=TODO
