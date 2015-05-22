@@ -19,7 +19,7 @@ last_tags=$(git tags --points-at "HEAD~$iteration") #this will require git >= 1.
 while [[ $last_tags == "" ]] #TODO use git rev-list --all and/or other options in order to limit the iterations
 do
    iteration=$iteration + 1
-   last_tags=$(git tags --points-at "HEAD~$iteration")
+   last_tags=$(git tags --points-at "HEAD~$iteration") #XXX Pb: that does not follow the direct filiation order
 done
 # take the first with numbers, or the first one:
 version= #TODO
