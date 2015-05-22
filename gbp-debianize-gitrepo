@@ -14,14 +14,21 @@ repo_name="$(basename $root_repo_path)"
 ## if several have numbers, take the smallest one by lexicographical order
 ## else, maybe take the previous one, if unique, and same rules if non unique/
 ## if no tag at all, create one called 0.1 (with git tag), and use it for "version"
-last_tags=$(git tags --points-at HEAD)
-if [[ $head_tags == "" ]]
-then
-   last_tags= #TODO
-fi
+$iteration=0
+last_tags=$(git tags --points-at "HEAD~$iteration") #this will require git >= 1.7.10
+while [[ $last_tags == "" ]]
+do
+   iteration=$iteration + 1
+   last_tags=$(git tags --points-at "HEAD~$iteration")
+done
+# take the first with numbers, or the first one:
+version= #TODO
 #by default:
-version=0.1
-##version=TODO
+if [[ $last_tags == "" ]]
+then
+   version="0.1"
+   git tag $version
+fi
 
 # Rename current branch to "upstream"
 git branch -m upstream
