@@ -16,7 +16,7 @@ repo_name="$(basename $root_repo_path)"
 ## if no tag at all, create one called 0.1 (with git tag), and use it for "version"
 $iteration=0
 last_tags=$(git tags --points-at "HEAD~$iteration") #this will require git >= 1.7.10
-while [[ $last_tags == "" ]]
+while [[ $last_tags == "" ]] #TODO use git rev-list --all and/or other options in order to limit the iterations
 do
    iteration=$iteration + 1
    last_tags=$(git tags --points-at "HEAD~$iteration")
