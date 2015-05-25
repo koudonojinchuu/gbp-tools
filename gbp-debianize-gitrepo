@@ -14,13 +14,29 @@ repo_name="$(basename $root_repo_path)"
 ## if several have numbers, take the smallest one by lexicographical order
 ## else, maybe take the previous one, if unique, and same rules if non unique/
 ## if no tag at all, create one called 0.1 (with git tag), and use it for "version"
-$iteration=0
-last_tags=$(git tags --points-at "HEAD~$iteration") #this will require git >= 1.7.10
-while [[ $last_tags == "" ]] #TODO use git rev-list --all and/or other options in order to limit the iterations
+
+#last_tags=$(git tags --points-at "HEAD~$iteration") #this will require git >= 1.7.10
+
+all_tags=$(git tag)
+pseudo_last_tags=$(git log --decorate --tags --no-walk | grep ^commit | awk '{$1=$2="";print $0}' | perl -ne 's/^ *\(// ; s/\) *$// ; s/(, *|^)HEAD(, *|$)// ; s/(, *|^)master(, *|$)// ; s/(^| *)tag: ([^ ]+?)(,|\n$)/$2\n/g; print' | sed '/^[ \t]*$/ d ; s/^ *//')
+last_tags=""
+for i in $pseudo_last_tags
 do
-   iteration=$iteration + 1
-   last_tags=$(git tags --points-at "HEAD~$iteration") #XXX Pb: that does not follow the direct filiation order
+   if [[ $all_tags =~ $i ]] ; then last_tags=$last_tags" $i" ; fi
 done
+last_tags="$(echo $last_tags | sed 's/^ *//')"
+
+#echo $last_tags
+for i in $last_tags
+do
+   thebranch=$(git branch -a --contains $(git rev-list $i | head -n1) )
+   echo "$i $thebranch"
+done
+exit 0
+
+## TODO : determine the branch of the tags...
+## maybe only keep tags that affect the current branch
+
 # take the first with numbers, or the first one:
 version= #TODO
 version=$(echo "$last_tags" | cut -d ' ' -f 1)
