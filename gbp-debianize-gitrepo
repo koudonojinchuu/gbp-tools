@@ -26,12 +26,16 @@ do
 done
 last_tags="$(echo $last_tags | sed 's/^ *//')"
 
-#echo $last_tags
-for i in $last_tags
-do
-   thebranch=$(git branch -a --contains $(git rev-list $i | head -n1) )
-   echo "$i $thebranch"
-done
+##echo $last_tags
+#for i in $last_tags
+#do
+#   thebranch=$(git branch -a --contains $(git rev-list $i | head -n1) | tr -d '\n' | sed 's/ *\* */ /g ; s/ *-> */ /g')
+#   echo "$i $thebranch"
+#done
+
+#better: TODO: put tags found in a hash indexed by the branches, then display tags by branches
+for i in $(git branch -a -vv | awk '{print $1}' | sed '/^ *\* *$/ d') ; do echo "`echo $i | sed 's:^remotes/:r/:'` `git describe --abbrev=0 --tags $i 2>/dev/null`" ; done
+
 exit 0
 
 ## TODO : determine the branch of the tags...
